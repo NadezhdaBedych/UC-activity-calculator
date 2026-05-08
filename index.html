@@ -365,9 +365,9 @@
         <div class="details-box">
           <h2>Модель оценки активности ЯК</h2>
 
-          <p><strong>Чувствительность:</strong> 87,2%.</p>
+          <p><strong>Чувствительность:</strong> 76%.</p>
 
-          <p><strong>Специфичность:</strong> 50,0%.</p>
+          <p><strong>Специфичность:</strong> 68%.</p>
         </div>
 
         <div class="details-box">
@@ -420,7 +420,7 @@
         + 0.045 * normalizedCalprotectin;
 
       const probability = 1 / (1 + Math.exp(-z));
-      const threshold = 0.456;
+      const threshold = 0.55;
 
       const resultBlock = document.getElementById('result');
       const resultText = document.getElementById('resultText');
@@ -428,6 +428,7 @@
       const interpretationText = document.getElementById('interpretationText');
 
       resultBlock.classList.remove('high', 'low');
+      resultBlock.style.display = 'block';
 
       if (probability >= threshold) {
         resultBlock.classList.add('high');
@@ -445,16 +446,17 @@
         '%';
     });
 
-    function resetForm() {
-      document.getElementById('ucForm').reset();
+function resetForm() {
+  document.getElementById('cdForm').reset();
 
-      const resultBlock = document.getElementById('result');
-      resultBlock.classList.remove('high', 'low');
+  const resultBlock = document.getElementById('result');
 
-      document.getElementById('resultText').textContent = '';
-      document.getElementById('probabilityText').textContent = '';
-      document.getElementById('interpretationText').textContent = '';
-    }
+  resultBlock.classList.remove('high', 'low');
+  resultBlock.style.display = 'none';
+
+  document.getElementById('resultText').textContent = '';
+  document.getElementById('interpretationText').textContent = '';
+}
   </script>
 </body>
 </html>
