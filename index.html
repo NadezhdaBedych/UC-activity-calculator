@@ -318,6 +318,7 @@
 
       <div id="calculator" class="tab-content active">
         <form id="ucForm">
+
           <div class="form-grid">
 
             <div class="form-group">
@@ -338,7 +339,9 @@
             <div class="form-group">
               <label for="calprotectin">Фекальный кальпротектин, мкг/г</label>
               <input type="number" id="calprotectin" step="0.01" required />
-              <span class="hint">В расчете используется нормированное значение: кальпротектин / 100.</span>
+              <span class="hint">
+                В расчете используется нормированное значение: кальпротектин / 100.
+              </span>
             </div>
 
           </div>
@@ -347,6 +350,7 @@
             <button type="submit" class="calculate">Рассчитать</button>
             <button type="button" class="reset" onclick="resetForm()">Очистить</button>
           </div>
+
         </form>
 
         <div id="result" class="result">
@@ -360,19 +364,23 @@
 
         <div class="details-box">
           <h2>Модель оценки активности ЯК</h2>
-          <p><strong>AUC:</strong> 0,796.</p>
+
           <p><strong>Чувствительность:</strong> 87,2%.</p>
+
           <p><strong>Специфичность:</strong> 50,0%.</p>
-          <p><strong>Критерий Хосмера–Лемешоу:</strong> p = 0,120.</p>
-          <p><strong>Пороговое значение:</strong> P = 0,456.</p>
         </div>
 
         <div class="details-box">
           <h3>Формула модели</h3>
+
           <div class="formula">
-            P = 1 / (1 + e<sup>-z</sup>)<br />
-            z = -1,316 + 0,166 × СРБ − 1,193 × ТМАО + 0,032 × альбумин + 0,045 × нормированный фекальный кальпротектин
+            P = 1 / (1 + e<sup>-z</sup>)<br /><br />
+
+            z = -1,316 + 0,166 × СРБ − 1,193 × ТМАО
+            + 0,032 × альбумин
+            + 0,045 × нормированный фекальный кальпротектин
           </div>
+
           <p class="note">
             Нормированный фекальный кальпротектин = фекальный кальпротектин / 100.
           </p>
@@ -424,11 +432,11 @@
       if (probability >= threshold) {
         resultBlock.classList.add('high');
         resultText.textContent = 'Высокая вероятность умеренной/высокой активности ЯК';
-        interpretationText.textContent = 'P ≥ 0,456: результат соответствует более высокой вероятности умеренной или высокой активности язвенного колита.';
+        interpretationText.textContent = 'Результат соответствует высокой вероятности умеренной или высокой активности язвенного колита.';
       } else {
         resultBlock.classList.add('low');
         resultText.textContent = 'Низкая вероятность умеренной/высокой активности ЯК';
-        interpretationText.textContent = 'P < 0,456: результат соответствует более высокой вероятности ремиссии или низкой активности заболевания.';
+        interpretationText.textContent = 'Результат соответствует высокой вероятности ремиссии или низкой активности заболевания.';
       }
 
       probabilityText.textContent =
