@@ -3,309 +3,449 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Калькулятор активности язвенного колита</title>
+  <title>Оценка активности язвенного колита</title>
+
   <style>
     :root {
-      --bg: #f6f7fb;
-      --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-      --border: #e5e7eb;
-      --primary: #2563eb;
-      --primary-light: #dbeafe;
-      --success: #166534;
-      --success-bg: #f0fdf4;
-      --danger: #991b1b;
-      --danger-bg: #fef2f2;
-      --warning: #92400e;
-      --warning-bg: #fffbeb;
+      --ibd-purple: #812990;
+      --ibd-purple-dark: #5f126b;
+      --ibd-purple-mid: #9a35a9;
+      --text: #24172a;
+      --muted: #6f5f75;
+      --border: #e5d5ea;
+      --white: #ffffff;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: var(--bg);
       color: var(--text);
-      line-height: 1.5;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(129, 41, 144, 0.16), transparent 30%),
+        radial-gradient(circle at 85% 18%, rgba(154, 53, 169, 0.14), transparent 28%),
+        linear-gradient(135deg, #fbf7fc 0%, #f2e3f5 48%, #ffffff 100%);
     }
 
     .container {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 32px 18px 48px;
-    }
-
-    .header {
-      background: linear-gradient(135deg, #1d4ed8, #0f766e);
-      color: white;
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 16px 35px rgba(31, 41, 55, 0.15);
-      margin-bottom: 24px;
-    }
-
-    .header h1 {
-      margin: 0 0 10px;
-      font-size: 30px;
-      line-height: 1.2;
-    }
-
-    .header p {
-      margin: 0;
-      opacity: 0.94;
+      max-width: 980px;
+      margin: 36px auto;
+      padding: 24px;
     }
 
     .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 22px;
-      box-shadow: 0 12px 26px rgba(31, 41, 55, 0.08);
+      position: relative;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(129, 41, 144, 0.14);
+      border-radius: 28px;
+      box-shadow: 0 18px 48px rgba(95, 18, 107, 0.18);
     }
 
-    .card h2 {
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -70px;
+      right: -120px;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: rgba(129, 41, 144, 0.08);
+      pointer-events: none;
+    }
+
+    .header {
+      position: relative;
+      min-height: 175px;
+      padding: 34px 36px 30px;
+      color: var(--white);
+      background:
+        linear-gradient(135deg, rgba(95, 18, 107, 0.98), rgba(129, 41, 144, 0.96)),
+        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.24), transparent 30%);
+    }
+
+    .header::after {
+      content: "";
+      position: absolute;
+      left: -80px;
+      bottom: -42px;
+      width: 420px;
+      height: 105px;
+      border-radius: 0 0 220px 220px;
+      border-bottom: 46px solid rgba(255, 255, 255, 0.18);
+      transform: rotate(3deg);
+      pointer-events: none;
+    }
+
+    .brand-row {
+      position: relative;
+      z-index: 1;
+    }
+
+    .title-block h1 {
+      margin: 0;
+      max-width: 780px;
+      font-size: 30px;
+      line-height: 1.25;
+      letter-spacing: -0.3px;
+    }
+
+    .subtitle {
+      margin: 12px 0 0;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 16px;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: #fcf8fd;
+    }
+
+    .tab-button {
+      flex: 1;
+      padding: 17px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 700;
+      color: #604368;
+      transition: 0.2s ease;
+    }
+
+    .tab-button:hover {
+      background: #f8eefb;
+      color: var(--ibd-purple);
+    }
+
+    .tab-button.active {
+      background: var(--white);
+      color: var(--ibd-purple);
+      border-bottom: 4px solid var(--ibd-purple);
+    }
+
+    .tab-content {
+      display: none;
+      padding: 34px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      font-weight: 700;
+      color: #38223f;
+    }
+
+    input {
+      padding: 13px 14px;
+      border: 1px solid #d9c4df;
+      border-radius: 13px;
+      font-size: 16px;
+      color: var(--text);
+      background: #fff;
+      transition: 0.2s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--ibd-purple);
+      box-shadow: 0 0 0 4px rgba(129, 41, 144, 0.14);
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    button.calculate,
+    button.reset {
+      padding: 14px 23px;
+      border: none;
+      border-radius: 13px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 800;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button.calculate {
+      background: linear-gradient(135deg, var(--ibd-purple-dark) 0%, var(--ibd-purple) 55%, var(--ibd-purple-mid) 100%);
+      color: var(--white);
+      box-shadow: 0 10px 22px rgba(129, 41, 144, 0.22);
+    }
+
+    button.calculate:hover,
+    button.reset:hover {
+      transform: translateY(-1px);
+    }
+
+    button.reset {
+      background: #f1e7f4;
+      color: var(--ibd-purple-dark);
+      border: 1px solid #dbc4e2;
+    }
+
+    .result {
+      margin-top: 24px;
+      padding: 22px;
+      border-radius: 18px;
+      display: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .result.high {
+      display: block;
+      background: linear-gradient(135deg, #fff1f1 0%, #ffd9d9 100%);
+      border: 1px solid #dc2626;
+      color: #b91c1c;
+    }
+
+    .result.low {
+      display: block;
+      background: linear-gradient(135deg, #effcf3 0%, #d7f7df 100%);
+      border: 1px solid #16a34a;
+      color: #166534;
+    }
+
+    .result h2 {
       margin: 0 0 8px;
       font-size: 22px;
     }
 
-    .description {
-      color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 18px;
+    .result p {
+      margin: 6px 0 0;
+      font-size: 16px;
     }
 
-    label {
-      display: block;
-      font-weight: 700;
-      margin: 12px 0 6px;
-      font-size: 14px;
-    }
-
-    input {
-      width: 100%;
+    .details-box {
+      background: linear-gradient(135deg, #fbf5fd 0%, #ffffff 100%);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 11px 12px;
-      font-size: 15px;
-      outline: none;
-      transition: border 0.15s, box-shadow 0.15s;
+      border-radius: 18px;
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(95, 18, 107, 0.06);
     }
 
-    input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-light);
-    }
-
-    .button-row {
-      display: flex;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    button {
-      border: none;
-      border-radius: 12px;
-      padding: 12px 14px;
-      cursor: pointer;
-      font-weight: 700;
-      font-size: 15px;
-    }
-
-    .primary {
-      background: var(--primary);
-      color: white;
-      flex: 1;
-    }
-
-    .secondary {
-      background: #eef2ff;
-      color: #3730a3;
-      margin-top: 16px;
-    }
-
-    .result {
-      margin-top: 18px;
-      border-radius: 16px;
-      padding: 16px;
-      border: 1px solid var(--border);
-      display: none;
-    }
-
-    .result.show { display: block; }
-
-    .result.low {
-      background: var(--success-bg);
-      color: var(--success);
-      border-color: #bbf7d0;
-    }
-
-    .result.high {
-      background: var(--danger-bg);
-      color: var(--danger);
-      border-color: #fecaca;
-    }
-
-    .result.warning {
-      background: var(--warning-bg);
-      color: var(--warning);
-      border-color: #fde68a;
-    }
-
-    .probability {
-      font-size: 34px;
-      font-weight: 800;
-      margin: 4px 0 8px;
-    }
-
-    .formula, .note {
-      margin-top: 16px;
-      padding: 14px;
-      border-radius: 14px;
-      font-size: 14px;
+    .details-box h2,
+    .details-box h3 {
+      margin-top: 0;
+      color: var(--ibd-purple);
     }
 
     .formula {
-      background: #f9fafb;
-      color: #374151;
-      border: 1px solid var(--border);
-      overflow-wrap: anywhere;
+      padding: 16px;
+      background: #ffffff;
+      border: 1px solid #e2cce8;
+      border-radius: 13px;
+      font-family: Consolas, monospace;
+      overflow-x: auto;
+      line-height: 1.6;
+      color: #32163a;
     }
 
     .note {
-      background: var(--warning-bg);
-      color: var(--warning);
-      border: 1px solid #fde68a;
+      margin-top: 14px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
     }
 
-    .small {
-      color: inherit;
-      opacity: 0.85;
-      font-size: 13px;
-      margin-top: 8px;
+    @media (max-width: 800px) {
+      .container {
+        margin: 0;
+        padding: 12px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .title-block h1 {
+        font-size: 24px;
+      }
+
+      .tab-content {
+        padding: 22px;
+      }
     }
   </style>
 </head>
+
 <body>
-  <main class="container">
-    <section class="header">
-      <h1>Калькулятор активности язвенного колита</h1>
-      <p>
-        Расчёт индивидуальной вероятности умеренной/высокой активности язвенного колита по модели бинарной логистической регрессии.
-      </p>
-    </section>
+  <div class="container">
+    <div class="card">
 
-    <section class="card">
-      <h2>Модель оценки активности язвенного колита</h2>
-      <div class="description">
-        Целевое состояние: умеренная или высокая активность ЯК. Значения лабораторных показателей необходимо вводить в указанных единицах измерения.
+      <div class="header">
+        <div class="brand-row">
+          <div class="title-block">
+            <h1>Оценка активности язвенного колита</h1>
+            <p class="subtitle">Прогностическая модель вероятности умеренной/высокой активности по лабораторным маркерам</p>
+          </div>
+        </div>
       </div>
 
-      <label for="crp">СРБ (г/л)</label>
-      <input id="crp" type="number" step="any" placeholder="г/л" />
-
-      <label for="tmao">ТМАО (мкмоль/л)</label>
-      <input id="tmao" type="number" step="any" placeholder="мкмоль/л" />
-
-      <label for="albumin">Альбумин (г/л)</label>
-      <input id="albumin" type="number" step="any" placeholder="г/л" />
-
-      <label for="calprotectin">Фекальный кальпротектин (мкг/г)</label>
-      <input id="calprotectin" type="number" step="any" placeholder="мкг/г" />
-
-      <div class="button-row">
-        <button class="primary" onclick="calculateUC()">Рассчитать</button>
-        <button class="secondary" onclick="resetCalculator()">Сброс</button>
+      <div class="tabs">
+        <button class="tab-button active" onclick="openTab(event, 'calculator')">Калькулятор</button>
+        <button class="tab-button" onclick="openTab(event, 'details')">Подробности модели</button>
       </div>
 
-      <div id="result" class="result"></div>
+      <div id="calculator" class="tab-content active">
+        <form id="ucForm">
+          <div class="form-grid">
 
-      <button class="secondary" onclick="toggleDetails()">Показать подробности модели</button>
-      <div id="details" style="display:none; margin-top:12px;" class="note">
-        Площадь под ROC-кривой: AUC = 0,794 для модели с добавлением ТМАО; AUC = 0,796 для модели с добавлением ТМАО и ЛПС-белка.<br>
-        Итоговое уравнение калькулятора включает СРБ, ТМАО, альбумин и фекальный кальпротектин.<br>
-        Оптимальный порог вероятности (индекс Юдена): P = 0,456.<br>
-        Индекс Юдена — 0,372; чувствительность — 87,2%, специфичность — 50,0%.<br>
-        Модель продемонстрировала хорошее соответствие данным по критерию Хосмера–Лемешева (p = 0,120).
+            <div class="form-group">
+              <label for="crp">СРБ, г/л</label>
+              <input type="number" id="crp" step="0.01" required />
+            </div>
+
+            <div class="form-group">
+              <label for="tmao">ТМАО, мкмоль/л</label>
+              <input type="number" id="tmao" step="0.0001" min="0.0001" required />
+            </div>
+
+            <div class="form-group">
+              <label for="albumin">Альбумин, г/л</label>
+              <input type="number" id="albumin" step="0.01" required />
+            </div>
+
+            <div class="form-group">
+              <label for="calprotectin">Фекальный кальпротектин, мкг/г</label>
+              <input type="number" id="calprotectin" step="0.01" required />
+              <span class="hint">В расчете используется нормированное значение: кальпротектин / 100.</span>
+            </div>
+
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="calculate">Рассчитать</button>
+            <button type="button" class="reset" onclick="resetForm()">Очистить</button>
+          </div>
+        </form>
+
+        <div id="result" class="result">
+          <h2 id="resultText"></h2>
+          <p id="probabilityText"></p>
+          <p id="interpretationText"></p>
+        </div>
       </div>
 
-      <div class="formula">
-        <strong>Формула модели:</strong><br>
-        P = 1 / (1 + e<sup>−z</sup>)<br>
-        z = −1,316 + 0,166×СРБ − 1,193×ТМАО + 0,032×альбумин + 0,045×фекальный кальпротектин
+      <div id="details" class="tab-content">
+
+        <div class="details-box">
+          <h2>Модель оценки активности ЯК</h2>
+          <p><strong>AUC:</strong> 0,796.</p>
+          <p><strong>Чувствительность:</strong> 87,2%.</p>
+          <p><strong>Специфичность:</strong> 50,0%.</p>
+          <p><strong>Критерий Хосмера–Лемешоу:</strong> p = 0,120.</p>
+          <p><strong>Пороговое значение:</strong> P = 0,456.</p>
+        </div>
+
+        <div class="details-box">
+          <h3>Формула модели</h3>
+          <div class="formula">
+            P = 1 / (1 + e<sup>-z</sup>)<br />
+            z = -1,316 + 0,166 × СРБ − 1,193 × ТМАО + 0,032 × альбумин + 0,045 × нормированный фекальный кальпротектин
+          </div>
+          <p class="note">
+            Нормированный фекальный кальпротектин = фекальный кальпротектин / 100.
+          </p>
+        </div>
+
       </div>
 
-      <div class="note">
-        <strong>Важно:</strong> результат является расчётной вероятностью по исследовательской модели и не заменяет клиническое заключение. Модель требует дополнительной внешней валидации на независимой выборке.
-      </div>
-    </section>
-  </main>
+    </div>
+  </div>
 
   <script>
-    const THRESHOLD = 0.456;
+    function openTab(event, tabName) {
+      const contents = document.querySelectorAll('.tab-content');
+      const buttons = document.querySelectorAll('.tab-button');
 
-    function logistic(z) {
-      return 1 / (1 + Math.exp(-z));
+      contents.forEach(content => content.classList.remove('active'));
+      buttons.forEach(button => button.classList.remove('active'));
+
+      document.getElementById(tabName).classList.add('active');
+      event.currentTarget.classList.add('active');
     }
 
-    function getValue(id) {
-      const rawValue = document.getElementById(id).value.replace(',', '.');
-      const value = parseFloat(rawValue);
-      if (Number.isNaN(value)) {
-        throw new Error('Пожалуйста, заполните все поля числовыми значениями.');
+    document.getElementById('ucForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const crp = parseFloat(document.getElementById('crp').value);
+      const tmao = parseFloat(document.getElementById('tmao').value);
+      const albumin = parseFloat(document.getElementById('albumin').value);
+      const calprotectin = parseFloat(document.getElementById('calprotectin').value);
+
+      const normalizedCalprotectin = calprotectin / 100;
+
+      const z = -1.316
+        + 0.166 * crp
+        - 1.193 * tmao
+        + 0.032 * albumin
+        + 0.045 * normalizedCalprotectin;
+
+      const probability = 1 / (1 + Math.exp(-z));
+      const threshold = 0.456;
+
+      const resultBlock = document.getElementById('result');
+      const resultText = document.getElementById('resultText');
+      const probabilityText = document.getElementById('probabilityText');
+      const interpretationText = document.getElementById('interpretationText');
+
+      resultBlock.classList.remove('high', 'low');
+
+      if (probability >= threshold) {
+        resultBlock.classList.add('high');
+        resultText.textContent = 'Высокая вероятность умеренной/высокой активности ЯК';
+        interpretationText.textContent = 'P ≥ 0,456: результат соответствует более высокой вероятности умеренной или высокой активности язвенного колита.';
+      } else {
+        resultBlock.classList.add('low');
+        resultText.textContent = 'Низкая вероятность умеренной/высокой активности ЯК';
+        interpretationText.textContent = 'P < 0,456: результат соответствует более высокой вероятности ремиссии или низкой активности заболевания.';
       }
-      return value;
-    }
 
-    function calculateUC() {
-      try {
-        const crp = getValue('crp');
-        const tmao = getValue('tmao');
-        const albumin = getValue('albumin');
-        const calprotectin = getValue('calprotectin');
+      probabilityText.textContent =
+        'Расчетная вероятность: ' +
+        (probability * 100).toFixed(1).replace('.', ',') +
+        '%';
+    });
 
-        const z = -1.316 + 0.166 * crp - 1.193 * tmao + 0.032 * albumin + 0.045 * calprotectin;
-        const p = logistic(z);
-        const percent = (p * 100).toFixed(1);
-        const result = document.getElementById('result');
+    function resetForm() {
+      document.getElementById('ucForm').reset();
 
-        if (p >= THRESHOLD) {
-          result.className = 'result show high';
-          result.innerHTML = `
-            <div><strong>Высокая вероятность умеренной/высокой активности ЯК</strong></div>
-            <div class="probability">${percent}%</div>
-            <div>Расчётная вероятность равна или превышает оптимальное пороговое значение P = 0,456.</div>
-            <div class="small">При данном пороге чувствительность модели составляет 87,2%, специфичность — 50,0%.</div>
-          `;
-        } else {
-          result.className = 'result show low';
-          result.innerHTML = `
-            <div><strong>Вероятность ремиссии или низкой активности ЯК</strong></div>
-            <div class="probability">${percent}%</div>
-            <div>Расчётная вероятность ниже оптимального порогового значения P = 0,456.</div>
-            <div class="small">Пациент с высокой вероятностью находится в ремиссии или имеет низкую активность заболевания. Результат следует сопоставлять с клиническими, эндоскопическими и лабораторными данными.</div>
-          `;
-        }
-      } catch (error) {
-        const result = document.getElementById('result');
-        result.className = 'result show warning';
-        result.innerHTML = `<strong>Ошибка ввода</strong><br>${error.message}`;
-      }
-    }
+      const resultBlock = document.getElementById('result');
+      resultBlock.classList.remove('high', 'low');
 
-    function toggleDetails() {
-      const d = document.getElementById('details');
-      d.style.display = d.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function resetCalculator() {
-      ['crp', 'tmao', 'albumin', 'calprotectin'].forEach(id => {
-        document.getElementById(id).value = '';
-      });
-      const result = document.getElementById('result');
-      result.className = 'result';
-      result.innerHTML = '';
+      document.getElementById('resultText').textContent = '';
+      document.getElementById('probabilityText').textContent = '';
+      document.getElementById('interpretationText').textContent = '';
     }
   </script>
 </body>
